@@ -12,7 +12,7 @@ Para rodar API
    `npm install`
    `docker-compose up -d`
    `npx prisma generate`
-   `npx prisma migrate dev`
+   `npx prisma migrate deploy`
    `npm run start:dev`
 
 Para rodar APP
