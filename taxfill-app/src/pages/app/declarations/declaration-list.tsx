@@ -20,13 +20,12 @@ export function DeclarationsList() {
 
   const fetchDeclarationsFn = async (query: FetchDeclarationsQuery) => {
     try {
-      const isAuth: string | undefined = isAuthenticated();
-      if (!isAuth) {
+      const token: string | undefined = isAuthenticated();
+      if (!token) {
         redirect('/auth/sign-in');
         return;
       }
-      const fetchedDeclarations: Declaration[] = await fetchDeclarations(query, isAuth);
-      console.log(fetchedDeclarations);
+      const fetchedDeclarations: Declaration[] = await fetchDeclarations(query, token);
       setDeclarations(fetchedDeclarations);
     } catch {
       console.error('Failed to fetch declarations');
@@ -65,6 +64,11 @@ export function DeclarationsList() {
     {
       accessorKey: 'taxRefund',
       header: 'Reembolso de imposto',
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => DeclarationStatus[row.original.status as unknown as keyof typeof DeclarationStatus],
     },
     {
       id: 'edit',

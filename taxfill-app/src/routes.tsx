@@ -6,7 +6,6 @@ import { SignUp } from './pages/auth/sign-up';
 import { NotFound } from './pages/404';
 import { ErrorPage } from './pages/error';
 import { Home } from './pages/app/home';
-import { Declaration } from './pages/app/declarations/declaration';
 import { DeclarationsList } from './pages/app/declarations/declaration-list';
 
 export const router = createBrowserRouter([

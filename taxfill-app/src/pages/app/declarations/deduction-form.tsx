@@ -27,6 +27,7 @@ const Select = forwardRef<HTMLDivElement, { value?: string; onValueChange?: (val
 
 interface DeductionEditorProps {
   onClose: () => void;
+  allowEdit?: boolean;
   deductions?: Deduction[];
   setDeductions: React.Dispatch<React.SetStateAction<Deduction[]>>;
 }
@@ -39,7 +40,7 @@ const deductionForm = z.object({
 
 type DeductionForm = z.infer<typeof deductionForm>;
 
-export function DeductionForm({ onClose, deductions: initialDeductions, setDeductions }: Readonly<DeductionEditorProps>) {
+export function DeductionForm({ onClose, allowEdit, deductions: initialDeductions, setDeductions }: Readonly<DeductionEditorProps>) {
   const [deductions, setDeductionsState] = useState<Deduction[]>(initialDeductions || []);
   const [selectedDeduction, setSelectedDeduction] = useState<Deduction | undefined>(undefined);
 
@@ -198,6 +199,7 @@ export function DeductionForm({ onClose, deductions: initialDeductions, setDeduc
           type="button"
           onClick={save}
           className="w-full mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          disabled={!allowEdit}
         >
           Salvar
         </Button>

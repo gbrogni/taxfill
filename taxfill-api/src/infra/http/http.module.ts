@@ -9,8 +9,6 @@ import { CreateDeclarationController } from './controllers/create-declaration.co
 import { UpdateDeclarationController } from './controllers/update-declaration.controller';
 import { CreateDeclarationUseCase } from '@/domain/application/use-cases/create-declaration';
 import { UpdateDeclarationUseCase } from '@/domain/application/use-cases/update-declaration';
-import { CreateIncomeUseCase } from '@/domain/application/use-cases/create-income';
-import { CreateDeductionUseCase } from '@/domain/application/use-cases/create-deduction';
 import { FetchDeclarationsController } from './controllers/fetch-declarations.controller';
 import { FetchDeclarationsUseCase } from '@/domain/application/use-cases/fetch-declarations';
 
@@ -26,8 +24,6 @@ import { FetchDeclarationsUseCase } from '@/domain/application/use-cases/fetch-d
   providers: [
     AuthenticateUserUseCase,
     CreateDeclarationUseCase,
-    CreateDeductionUseCase,
-    CreateIncomeUseCase,
     CreateUserUseCase,
     FetchDeclarationsUseCase,
     UpdateDeclarationUseCase,

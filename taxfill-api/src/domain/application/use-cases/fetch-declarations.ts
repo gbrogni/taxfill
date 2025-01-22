@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { DeclarationsRepository } from '../repositories/declarations-repository';
 
 interface FetchDeclarationsUseCaseRequest {
+  userId: string;
   year?: number;
   status?: DeclarationStatus;
 }
@@ -18,8 +19,8 @@ export class FetchDeclarationsUseCase {
     private readonly declarationsRepository: DeclarationsRepository
   ) { }
 
-  async execute({ year, status }: FetchDeclarationsUseCaseRequest): Promise<FetchDeclarationsUseCaseResponse> {
-    const declarations: Declaration[] = await this.declarationsRepository.find(year, status);
+  async execute({ userId, year, status }: FetchDeclarationsUseCaseRequest): Promise<FetchDeclarationsUseCaseResponse> {
+    const declarations: Declaration[] = await this.declarationsRepository.find(userId, year, status);
     return right(declarations);
   }
 }

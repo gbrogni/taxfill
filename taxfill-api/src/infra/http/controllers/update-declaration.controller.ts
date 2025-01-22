@@ -7,6 +7,7 @@ import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { UserPayload } from '@/infra/auth/jwt.strategy';
 import { UpdateDeclarationUseCase } from '@/domain/application/use-cases/update-declaration';
 import { DeclarationStatus } from '@/domain/enterprise/enums/declaration-status';
+import { ApiBearerAuth, ApiResponse, ApiTags, ApiBody, ApiParam } from '@nestjs/swagger';
 
 const incomeSchema = z.object({
   id: z.string().optional(),
@@ -36,6 +37,8 @@ const bodyValidationPipe = new ZodValidationPipe(updateDeclarationBodySchema);
 
 type UpdateDeclarationBodySchema = z.infer<typeof updateDeclarationBodySchema>;
 
+@ApiBearerAuth('access_token')
+@ApiTags('Declarations')
 @Controller('/declarations/:id')
 export class UpdateDeclarationController {
 
@@ -45,6 +48,45 @@ export class UpdateDeclarationController {
 
   @Put()
   @HttpCode(204)
+  @ApiParam({ name: 'id', required: true, description: 'Declaration ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        year: { type: 'number' },
+        description: { type: 'string', nullable: true },
+        status: { type: 'string', enum: Object.values(DeclarationStatus) },
+        incomes: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', nullable: true },
+              type: { type: 'string', enum: Object.values(IncomeType) },
+              description: { type: 'string', nullable: true },
+              amount: { type: 'number' }
+            }
+          }
+        },
+        deductions: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', nullable: true },
+              type: { type: 'string', enum: Object.values(DeductionType) },
+              description: { type: 'string', nullable: true },
+              amount: { type: 'number' }
+            }
+          }
+        },
+        taxDue: { type: 'number' },
+        taxRefund: { type: 'number' }
+      }
+    }
+  })
+  @ApiResponse({ status: 204, description: 'Declaration updated successfully' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   async handle(
     @Body(bodyValidationPipe) body: UpdateDeclarationBodySchema,
     @CurrentUser() user: UserPayload,

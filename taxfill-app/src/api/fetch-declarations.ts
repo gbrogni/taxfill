@@ -9,12 +9,12 @@ export interface FetchDeclarationsQuery {
 
 export async function fetchDeclarations(query: FetchDeclarationsQuery, token: string): Promise<Declaration[]> {
   return await api.get<Declaration[]>('/declarations', {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
     params: {
       year: query.year,
       status: query.status
-    }
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   }).then((response) => response.data);
 }

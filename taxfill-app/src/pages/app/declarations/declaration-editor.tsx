@@ -167,7 +167,7 @@ export function DeclarationEditor({ onClose, declaration }: Readonly<Declaration
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>{declaration ? 'Editar rendimento' : 'Criar rendimento'}</DialogTitle>
-              <IncomeForm onClose={handleCloseIncomesEditorModal} incomes={incomes} setIncomes={setIncomes} />
+              <IncomeForm onClose={handleCloseIncomesEditorModal} allowEdit={declaration?.status.toString() !== 'SUBMITTED'}  incomes={incomes} setIncomes={setIncomes} />
               <DialogClose />
             </DialogContent>
           </Dialog>
@@ -182,7 +182,7 @@ export function DeclarationEditor({ onClose, declaration }: Readonly<Declaration
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>{declaration ? 'Editar dedução' : 'Criar dedução'}</DialogTitle>
-              <DeductionForm onClose={handleCloseDeductionsEditorModal} deductions={deductions} setDeductions={setDeductions} />
+              <DeductionForm onClose={handleCloseDeductionsEditorModal} allowEdit={declaration?.status.toString() !== 'SUBMITTED'} deductions={deductions} setDeductions={setDeductions} />
               <DialogClose />
             </DialogContent>
           </Dialog>
@@ -220,7 +220,7 @@ export function DeclarationEditor({ onClose, declaration }: Readonly<Declaration
           type="submit"
           className={`w-full mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md ${Object.keys(errors).length > 0 ? 'bg-gray-400 hover:bg-gray-400' : 'bg-green-600 hover:bg-green-700'
             } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
-          disabled={Object.keys(errors).length > 0}
+          disabled={Object.keys(errors).length > 0 || declaration && declaration.status.toString() === 'SUBMITTED'}
         >
           Salvar
         </Button>

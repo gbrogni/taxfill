@@ -9,6 +9,7 @@ import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { DeclarationStatus } from '@/domain/enterprise/enums/declaration-status';
 import { Income } from '@/domain/enterprise/entities/income';
 import { Deduction } from '@/domain/enterprise/entities/deduction';
+import { ApiBearerAuth, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 
 const incomeSchema = z.object({
   type: z.nativeEnum(IncomeType),
@@ -36,6 +37,8 @@ const bodyValidationPipe = new ZodValidationPipe(createDeclarationBodySchema);
 
 type CreateDeclarationBodySchema = z.infer<typeof createDeclarationBodySchema>;
 
+@ApiBearerAuth('access_token')
+@ApiTags('Declarations')
 @Controller('/declarations')
 export class CreateDeclarationController {
 
@@ -45,6 +48,42 @@ export class CreateDeclarationController {
 
   @Post()
   @HttpCode(201)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        year: { type: 'number' },
+        description: { type: 'string', nullable: true },
+        status: { type: 'string', enum: Object.values(DeclarationStatus) },
+        incomes: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              type: { type: 'string', enum: Object.values(IncomeType) },
+              description: { type: 'string', nullable: true },
+              amount: { type: 'number' }
+            }
+          }
+        },
+        deductions: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              type: { type: 'string', enum: Object.values(DeductionType) },
+              description: { type: 'string', nullable: true },
+              amount: { type: 'number' }
+            }
+          }
+        },
+        taxDue: { type: 'number' },
+        taxRefund: { type: 'number' }
+      }
+    }
+  })
+  @ApiResponse({ status: 201, description: 'Declaration created successfully' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   async handle(
     @Body(bodyValidationPipe) body: CreateDeclarationBodySchema,
     @CurrentUser() user: UserPayload

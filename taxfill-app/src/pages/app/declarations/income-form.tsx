@@ -27,6 +27,7 @@ const Select = forwardRef<HTMLDivElement, { value?: string; onValueChange?: (val
 
 interface IncomeEditorProps {
   onClose: () => void;
+  allowEdit?: boolean;
   incomes?: Income[];
   setIncomes: React.Dispatch<React.SetStateAction<Income[]>>;
 }
@@ -39,7 +40,7 @@ const incomeForm = z.object({
 
 type IncomeForm = z.infer<typeof incomeForm>;
 
-export function IncomeForm({ onClose, incomes: initialIncomes, setIncomes }: Readonly<IncomeEditorProps>) {
+export function IncomeForm({ onClose, allowEdit, incomes: initialIncomes, setIncomes }: Readonly<IncomeEditorProps>) {
   const [incomes, setIncomesState] = useState<Income[]>(initialIncomes || []);
   const [selectedIncome, setSelectedIncome] = useState<Income | undefined>(undefined);
 
@@ -198,6 +199,7 @@ export function IncomeForm({ onClose, incomes: initialIncomes, setIncomes }: Rea
           type="button"
           onClick={save}
           className="w-full mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          disabled={!allowEdit}
         >
           Salvar
         </Button>

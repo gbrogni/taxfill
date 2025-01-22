@@ -57,8 +57,10 @@ export class PrismaDeclarationsRepository implements DeclarationsRepository {
     }
   }
 
-  async find(year?: number, status?: DeclarationStatus): Promise<Declaration[]> {
+  async find(userId: string, year?: number, status?: DeclarationStatus): Promise<Declaration[]> {
+    console.log('userId', userId);
     const whereClause = {
+      userId,
       ...(year && { year }),
       ...(status && { status })
     };

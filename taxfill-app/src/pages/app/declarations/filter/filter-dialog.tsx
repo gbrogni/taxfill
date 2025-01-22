@@ -49,7 +49,8 @@ export function FilterDialog({ open, onClose, onApply }: Readonly<FilterDialogPr
   } = useForm<FilterDialogForm>();
 
   const onSubmit = (data: FilterDialogForm) => {
-    onApply(data.year ?? undefined, data.status ?? undefined);
+    const status = data.status?.toString() === 'none' ? undefined : data.status ?? undefined;
+    onApply(data.year ?? undefined, status);
     onClose();
   };
 
