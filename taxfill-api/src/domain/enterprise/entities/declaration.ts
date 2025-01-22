@@ -63,6 +63,14 @@ export class Declaration extends Entity<DeclarationProps> {
     this.props.deductions = deductions;
   }
 
+  set taxDue(taxDue: number) {
+    this.props.taxDue = taxDue;
+  }
+
+  set taxRefund(taxRefund: number) {
+    this.props.taxRefund = taxRefund;
+  }
+
   static create(props: Optional<DeclarationProps, 'incomes' | 'deductions'>, id?: UniqueEntityID): Declaration {
     return new Declaration(
       {

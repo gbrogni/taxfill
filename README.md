@@ -6,11 +6,22 @@ Certifique-se de que você tem o Node.js na versão 16.20.2, npm e Docker instal
 
 Clone este repositório:
    `git clone https://github.com/gbrogni/taxfill.git`
-   `cd taxfill`
+
+Para rodar API
+   `cd taxfill-api`
+   `npm install`
+   `docker-compose up -d`
+   `npx prisma generate`
+   `npx prisma migrate dev`
+   `npm run start:dev`
+
+Para rodar APP
+   `cd taxfill-app`
+   `npm install`
+   `npm run dev`
 
 ## Uso
 
-Execute o seguinte comando: `docker-compose up --build`
 Após rodar o comando você poderá utilizar a aplicação nesses endereços:
    - API Docs: http://localhost:3000/api-docs
    - APP: http://localhost:4000

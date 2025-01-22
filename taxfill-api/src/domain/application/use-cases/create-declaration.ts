@@ -75,8 +75,26 @@ export class CreateDeclarationUseCase {
     const totalIncomes: number = newIncomes.reduce((acc, income) => acc + income.amount, 0);
     const totalDeductions: number = newDeductions.reduce((acc, deduction) => acc + deduction.amount, 0);
 
+    if (status === DeclarationStatus.SUBMITTED) {
+      const taxableIncome: number = Math.max(totalIncomes - totalDeductions, 0);
+      const calculatedTaxDue: number = this.calculateTaxDue(taxableIncome);
+      const calculatedTaxRefund: number = Math.max(totalDeductions - calculatedTaxDue, 0);
+      declaration.taxDue = calculatedTaxDue;
+      declaration.taxRefund = calculatedTaxRefund;
+    }
+
     await this.declarationRepository.createDraft(declaration, totalIncomes, totalDeductions);
 
     return right({ declaration });
+  }
+
+  private calculateTaxDue(taxableIncome: number): number {
+    if (taxableIncome <= 20000) {
+      return taxableIncome * 0.10;
+    } else if (taxableIncome <= 50000) {
+      return 2000 + (taxableIncome - 20000) * 0.20;
+    } else {
+      return 8000 + (taxableIncome - 50000) * 0.30;
+    }
   }
 }
