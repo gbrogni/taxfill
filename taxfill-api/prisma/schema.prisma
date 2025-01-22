@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  
+  declarations Declaration[]
+}
+
+model Declaration {
+  id                    String            @id @default(uuid())
+  userId                String
+  description           String?
+  originalDeclarationId String?
+  year                  Int
+  status                DeclarationStatus @default(DRAFT)
+  totalIncome           Float             @default(0)
+  totalDeductions       Float             @default(0)
+  taxDue                Float             @default(0)
+  taxRefund             Float             @default(0)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  incomes               Income[]
+  deductions            Deduction[]
+
+  user                User          @relation(fields: [userId], references: [id])
+  originalDeclaration Declaration?  @relation("DeclarationHistory", fields: [originalDeclarationId], references: [id])
+  retifications       Declaration[] @relation("DeclarationHistory")
+}
+
+model Income {
+  id            String     @id @default(uuid())
+  declarationId String
+  type          IncomeType
+  description   String?
+  amount        Float
+
+  declaration Declaration @relation(fields: [declarationId], references: [id])
+}
+
+model Deduction {
+  id            String        @id @default(uuid())
+  declarationId String
+  type          DeductionType
+  description   String?
+  amount        Float
+
+  declaration Declaration @relation(fields: [declarationId], references: [id])
+}
+
+enum DeclarationStatus {
+  DRAFT
+  SUBMITTED
+}
+
+enum IncomeType {
+  SALARY
+  RENT
+  INVESTMENT
+  OTHER
+}
+
+enum DeductionType {
+  HEALTH
+  EDUCATION
+  DEPENDENTS
+  OTHER
+}
